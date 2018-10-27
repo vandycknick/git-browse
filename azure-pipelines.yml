@@ -1,0 +1,19 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  BuildConfiguration: 'Release'
+
+steps:
+- bash: dotnet restore
+  displayName: Restore Packages
+
+- bash: dotnet test test/GitBrowse.Test/GitBrowse.Test.csproj
+  displayName: Run tests
+
+- bash: |
+    dotnet build --configuration $BuildConfiguration
+    dotnet pack --no-build -o $Build.ArtifactStagingDirectory
+  displayName: Package tool
+
+- task: PublishBuildArtifacts@1
