@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using LibGit2Sharp;
 
@@ -51,7 +52,15 @@ namespace GitBrowse
                 FileName = url,
             };
 
-            Process.Start(info);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) && RuntimeInformation.OSDescription.Contains("Microsoft"))
+            {
+                info.UseShellExecute = false;
+                info.FileName = "powershell.exe";
+                info.Arguments = $"start {url}";
+            }
+
+            var proc = Process.Start(info);
+            proc.WaitForExit();
         }
 
         public static string GitRemoteToUrl(string origin)
