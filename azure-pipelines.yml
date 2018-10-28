@@ -12,8 +12,8 @@ steps:
   displayName: Run tests
 
 - bash: |
-    dotnet build --configuration $BuildConfiguration
-    dotnet pack --no-build -o $Build.ArtifactStagingDirectory
+    dotnet build --configuration $BUILDCONFIGURATION
+    dotnet pack --no-build -o $BUILD_ARTIFACTSTAGINGDIRECTORY
   displayName: Package tool
 
 - task: PublishBuildArtifacts@1
