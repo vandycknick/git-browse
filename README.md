@@ -1,6 +1,7 @@
 # git-browse
 
-[![Build Status](https://dev.azure.com/vandycknick/git-browse/_apis/build/status/nickvdyck.git-browse)](https://dev.azure.com/vandycknick/git-browse/_build/latest?definitionId=3)
+[![Build Status][azure-ci-badge]][azure-ci-url]
+[![NuGet Package][nuget-package-badge]][nuget-package-url]
 
 Git sub-command to open the current repository website (GitHub, GitLab, VSTS, ...) in your browser.
 
@@ -53,3 +54,7 @@ You will need to perform the following steps when not running on windows:
 ```sh
 sudo apt install libcurl3
 ```
+[azure-ci-url]: https://dev.azure.com/vandycknick/git-browse/_build/latest?definitionId=3
+[azure-ci-badge]: https://dev.azure.com/vandycknick/git-browse/_apis/build/status/nickvdyck.git-browse
+[nuget-package-url]: https://www.nuget.org/packages/git-browse/
+[nuget-package-badge]: https://img.shields.io/nuget/v/git-browse.svg?style=flat-square&label=nuget

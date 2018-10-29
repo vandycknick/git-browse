@@ -9,6 +9,7 @@
     <TieredCompilation>true</TieredCompilation>
     <RootNamespace>GitBrowse</RootNamespace>
     <ToolCommandName>git-browse</ToolCommandName>
+    <AssemblyName>git-browse</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

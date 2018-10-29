@@ -42,9 +42,7 @@ namespace GitBrowse
             }
 
             var repository = new Repository(path);
-            var origin = repository.Config.GetValueOrDefault<string>("remote.origin.url");
-            var branch = repository.Head.FriendlyName;
-            var url = GitRemoteToUrl(origin);
+            var url = GetRemoteUrlFromGitRepository(repository);
 
             var info = new ProcessStartInfo()
             {
@@ -63,22 +61,39 @@ namespace GitBrowse
             proc.WaitForExit();
         }
 
-        public static string GitRemoteToUrl(string origin)
+        public static string GetRemoteUrlFromGitRepository(IRepository repository)
+        {
+            var remote = repository.Config.GetValueOrDefault<string>("remote.origin.url");
+            var branch = repository.Head.FriendlyName;
+            (string protocol, string domain, string urlPath) = ParseGitRemoteUrl(remote);
+
+            protocol = repository.Config.GetValueOrDefault<string>("browse.protocol", protocol);
+            domain = repository.Config.GetValueOrDefault<string>("browse.domain", domain);
+
+            var url = $"{protocol}://{domain}/{urlPath}";
+
+            if (branch != "master" && repository.Head.IsTracking)
+                url = $"url/tree/{branch}";
+
+            return url;
+        }
+
+        public static (string, string, string) ParseGitRemoteUrl(string remote)
         {
             string domain = "";
             string urlpath = "";
+            string protocol = PROTOCOL;
 
-            if (IsUrlRegex.IsMatch(origin))
+            if (IsUrlRegex.IsMatch(remote))
             {
-                var matches = IsUrlRegex.Matches(origin);
-                var uri = new Uri(origin);
-                var protocol = uri.Scheme;
+                var matches = IsUrlRegex.Matches(remote);
+                var uri = new Uri(remote);
                 domain = uri.Host;
                 urlpath = uri.AbsolutePath;
             }
             else
             {
-                var uri = origin.Split('@', 2)[1];
+                var uri = remote.Split('@', 2)[1];
                 var parts = uri.Split(':', 2);
                 domain = parts[0];
                 urlpath = parts[1];
@@ -87,7 +102,7 @@ namespace GitBrowse
             urlpath = urlpath.TrimStart('/').TrimEnd('/');
             urlpath = urlpath.TrimEnd('.', 'g', 'i', 't');
 
-            return $"{PROTOCOL}://{domain}/{urlpath}";
+            return (protocol, domain, urlpath);
         }
 
         public static void ShowHelp()

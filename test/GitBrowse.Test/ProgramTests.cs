@@ -12,19 +12,23 @@ namespace GitBrowse.Test
         // ftp[s]://host.xz[:port]/path/to/repo.git/
         // [user@]host.xz:path/to/repo.git/ - scp-like but is an alternative to ssh.
         // [user@]hostalias:path/to/repo.git/ - handles host aliases defined in ssh_config(5)
-
         [Theory]
-        [InlineData("ssh://user@github.com/path/to/repo.git", "https://github.com/path/to/repo")]
-        [InlineData("https://github.com/path/to/repo.git", "https://github.com/path/to/repo")]
-        [InlineData("http://github.com/path/to/repo.git/", "https://github.com/path/to/repo")]
-        [InlineData("git@github.com:path/to/repo.git", "https://github.com/path/to/repo")]
-        public void Program_ConvertGitUrl_TransformsConfiguredGitRemoteUrlCorrectlyToHttp(string input, string expected)
+        [InlineData("ssh://github.com/path/to/repo.git", "https", "github.com", "path/to/repo")]
+        [InlineData("ssh://user@github.com/path/to/repo.git", "https", "github.com", "path/to/repo")]
+        [InlineData("ssh://user@github.com:22/path/to/repo.git", "https", "github.com", "path/to/repo")]
+        [InlineData("https://github.com/path/to/repo.git", "https", "github.com", "path/to/repo")]
+        [InlineData("http://github.com/path/to/repo.git/", "https", "github.com", "path/to/repo")]
+        [InlineData("ftp://github.com/path/to/repo.git/", "https", "github.com", "path/to/repo")]
+        [InlineData("git@github.com:path/to/repo.git", "https", "github.com", "path/to/repo")]
+        public void Program_ParseGitRemoteUrl_TransformsConfiguredGitRemoteUrlCorrectlyToHttp(string input, string expProtocol, string expDomain, string expUrlPath)
         {
             // Act
-            var url = Program.GitRemoteToUrl(input);
+            (string protocol, string domain, string urlPath) = Program.ParseGitRemoteUrl(input);
 
             // Assert
-            Assert.Equal(expected, url);
+            Assert.Equal(expProtocol, protocol);
+            Assert.Equal(expDomain, domain);
+            Assert.Equal(expUrlPath, urlPath);
         }
     }
 }
