@@ -43,6 +43,7 @@ namespace GitBrowse
 
             var repository = new Repository(path);
             var url = GetRemoteUrlFromGitRepository(repository);
+            url = Uri.EscapeUriString(url);
 
             var info = new ProcessStartInfo()
             {
@@ -72,8 +73,8 @@ namespace GitBrowse
 
             var url = $"{protocol}://{domain}/{urlPath}";
 
-            if (branch != "master" && repository.Head.IsTracking)
-                url = $"url/tree/{branch}";
+            if (branch != "master")
+                url = $"{url}/tree/{branch}";
 
             return url;
         }
@@ -100,7 +101,7 @@ namespace GitBrowse
             }
 
             urlpath = urlpath.TrimStart('/').TrimEnd('/');
-            urlpath = urlpath.TrimEnd('.', 'g', 'i', 't');
+            urlpath = urlpath.TrimEnd(".git");
 
             return (protocol, domain, urlpath);
         }
