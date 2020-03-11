@@ -1,7 +1,5 @@
 <Project>
 
-  <Import Project="Version.props" />
-
   <PropertyGroup>
     <Authors>Nick Van Dyck</Authors>
     <Product>git-browse</Product>
@@ -24,11 +22,19 @@
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/$(MSBuildProjectName)</BaseOutputPath>
 
+    <MinVerAutoIncrement>minor</MinVerAutoIncrement>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Unix'">
     <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).build/obj/unix/$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <BaseOutputPath>$(MSBuildThisFileDirectory).build/bin/unix/$(MSBuildProjectName)</BaseOutputPath>
   </PropertyGroup>
+
+  <ItemGroup Condition="$(IsPackable) == 'true'">
+    <PackageReference Include="MinVer" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

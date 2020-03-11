@@ -81,10 +81,10 @@ namespace GitBrowse
 
         public static (string, string, string) ParseGitRemoteUrl(string remote)
         {
-            string domain = "";
-            string urlpath = "";
             string protocol = PROTOCOL;
 
+            string domain;
+            string urlpath;
             if (IsUrlRegex.IsMatch(remote))
             {
                 var matches = IsUrlRegex.Matches(remote);
